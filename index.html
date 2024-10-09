@@ -86,6 +86,7 @@
         .small-chart, .bottom-small-chart {
             width: 100%;
             height: 280px; /* 小图的高度统一 */
+            margin-top: 100px
         }
 
         .gauge-container h3 {
@@ -96,62 +97,103 @@
 </head>
 <body>
     <div class="banner">
-        <h1>
+        <h1 style="color: #00355f;">
             <span class="australian">Australian</span>
-            <span class="flights">FLIGHTS</span>
+            <span class="flights" style="background-color: #00355f; color: #FFD700;">FLIGHTS</span>
         </h1>
     </div>
-
+    
     <div class="dashboard">
         <div class="gauge-container map-large">
-            <h3>Australian Cities Map</h3>
+            <h3 style="color: #00355f;">Australian Cities Map</h3>
+            <p style="color: #00355f;">
+                This map displays the main cities in Australia along with the number of departing flights. 
+                Larger circles represent higher volumes of traffic, helping to identify the busiest air travel hubs in the country. 
+                Use the airline selection to view data specific to different carriers.
+            </p>
+            <label for="airlineSelect" style="color: #00355f;">Select Airline: </label>
+            <select id="airlineSelect" onchange="updateCharts()"></select>
             <div id="map"></div>
         </div>
         
         <div class="gauge-container small-chart">
-            <h3>On-time Performance</h3>
+            <h3 style="color: #00355f;">On-time Performance</h3>
+            <p style="color: #00355f;">
+                This gauge displays the percentage of flights that departed or arrived on time. 
+                A higher percentage indicates better punctuality, which is key for passenger satisfaction 
+                and operational efficiency of airlines and airports.
+            </p>
             <div id="onTimeGauge"></div>
         </div>
         
         <div class="gauge-container small-chart">
-            <h3>Cancellation Rate</h3>
+            <h3 style="color: #00355f;">Cancellation Rate</h3>
+            <p style="color: #00355f;">
+                This gauge shows the percentage of flights that were canceled. 
+                A lower rate reflects better reliability, making it a critical metric 
+                for understanding operational challenges and passenger impact.
+            </p>
             <div id="cancellationGauge"></div>
         </div>
         
         <div class="gauge-container small-chart">
-            <h3>Australian States Flight Volume Map</h3>
+            <h3 style="color: #00355f;">Australian States Flight Volume Map</h3>
+            <p style="color: #00355f;">
+                This map illustrates the distribution of flight volumes across different states in Australia. 
+                Darker shades indicate areas with more flight activity, helping to visualize regional air traffic intensity.
+            </p>
             <div id="map2"></div>
         </div>
         
         <div class="gauge-container small-chart">
-            <h3>On-time Performance Comparison</h3>
+            <h3 style="color: #00355f;">On-time Performance Comparison</h3>
+            <p style="color: #00355f;">
+                Compare on-time performance between arrivals and departures with this chart. 
+                It reveals any inconsistencies in flight punctuality, offering insights into potential areas for improvement.
+            </p>
             <div id="onTimeComparison"></div>
         </div>
         
         <div class="gauge-container bottom-small-chart">
-            <h3>Monthly Flight Counts per Year</h3>
+            <h3 style="color: #00355f;">Monthly Flight Counts per Year</h3>
+            <p style="color: #00355f;">
+                This heatmap shows the number of flights each month over multiple years. 
+                Darker shades indicate busier months, making it easier to spot seasonal trends in air travel.
+            </p>
             <div id="heatmap-vis"></div>
         </div>
         
         <div class="gauge-container small-chart">
-            <h3>Flight Arrivals vs Departures</h3>
+            <h3 style="color: #00355f;">Flight Arrivals vs Departures</h3>
+            <p style="color: #00355f;">
+                This pie chart visualizes the proportion of arrivals versus departures for each city. 
+                It helps identify cities that serve as major transit hubs or destinations.
+            </p>
+            <label for="citySelect" style="color: #00355f;">Select City: </label>
+            <select id="citySelect" onchange="updateCharts()"></select>
             <div id="additional-chart-2"></div>
         </div>
         
         <div class="gauge-container bottom-small-chart">
-            <h3>Overall Flight On-time Performance</h3>
+            <h3 style="color: #00355f;">Overall Flight On-time Performance</h3>
+            <p style="color: #00355f;">
+                This line chart tracks the trend of on-time performance over the years, 
+                allowing a deeper understanding of long-term improvements or challenges in flight punctuality.
+            </p>
             <div id="additional-chart-3"></div>
         </div>
         
         <div class="gauge-container bottom-small-chart">
-            <h3>Filter 4</h3>
-            <label for="airlineSelect">Select Airline: </label>
-            <select id="airlineSelect" onchange="updateCharts()"></select>
-            <label for="citySelect">Select City: </label>
-            <select id="citySelect" onchange="updateCharts()"></select>
+            <h3 style="color: #00355f;">Introduction</h3>
+            <p style="color: #00355f;">
+                Welcome to the Australian Flights Dashboard. This dashboard provides insights into the air travel landscape of Australia, 
+                including city-specific traffic, airline punctuality, and cancellation rates. Use the interactive elements to explore 
+                different aspects of air travel data and understand the dynamics of Australia’s aviation sector.
+            </p>
             <div id="additionalChart4"></div>
         </div>
     </div>
+    
     <script type="text/javascript">
         // Function to load the airlines dynamically into the dropdown
         async function loadAirlines() {
@@ -350,6 +392,12 @@ const cancellationGaugeSpec = {
 
             // Function to embed the Australian Cities Map
             async function embedMap() {
+    // 获取用户选择的航空公司
+    const selectedAirline = document.getElementById("airlineSelect").value;
+
+    // 如果选择了"Macair"或"MacAir"，则忽略它们并展示所有数据
+    const filteredAirline = selectedAirline.toLowerCase() === "macair" ? "All Airlines" : selectedAirline;
+
     const mapSpec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
         "width": 1100,
@@ -360,6 +408,7 @@ const cancellationGaugeSpec = {
             "center": [133, -28]
         },
         "layer": [
+            // 添加地图底图层，显示澳大利亚地理形状
             {
                 "data": {
                     "url": "https://raw.githubusercontent.com/Zongl1n/FIT3179/refs/heads/main/3179temp/ne_10m_admin_0_countries.json",
@@ -370,16 +419,20 @@ const cancellationGaugeSpec = {
                     "color": {"value": "#00355f"}  
                 }
             },
+            // 显示城市航班数据的层
             {
                 "data": {
                     "url": "https://raw.githubusercontent.com/Zongl1n/FIT3179/refs/heads/main/3179temp/DomesticAirlines.csv",
                     "format": {"type": "csv"}
                 },
                 "transform": [
-                    {"calculate": "upper(datum.Departing_Port)", "as": "City1_upper"},
+                    // 过滤选择的航空公司，忽略"Macair"和"MacAir"
                     {
-                        "filter": "datum.City1_upper == 'SYDNEY' || datum.City1_upper == 'MELBOURNE' || datum.City1_upper == 'BRISBANE' || datum.City1_upper == 'PERTH' || datum.City1_upper == 'ADELAIDE' || datum.City1_upper == 'DARWIN' || datum.City1_upper == 'HOBART' || datum.City1_upper == 'CANBERRA' || datum.City1_upper == 'NEWCASTLE' || datum.City1_upper == 'GOLD COAST' || datum.City1_upper == 'CAIRNS'"
+                        "filter": filteredAirline === "All Airlines"
+                            ? "datum.Departing_Port !== null"
+                            : `datum.Airline == '${filteredAirline}'`
                     },
+                    {"calculate": "upper(datum.Departing_Port)", "as": "City1_upper"},
                     {"aggregate": [{"op": "count", "as": "city_count"}], "groupby": ["City1_upper"]},
                     {
                         "lookup": "City1_upper",
@@ -396,7 +449,27 @@ const cancellationGaugeSpec = {
                                     {"city": "CANBERRA", "lat": -35.2809, "lon": 149.1300},
                                     {"city": "NEWCASTLE", "lat": -32.9283, "lon": 151.7817},
                                     {"city": "GOLD COAST", "lat": -28.0167, "lon": 153.4000},
-                                    {"city": "CAIRNS", "lat": -16.9186, "lon": 145.7781}
+                                    {"city": "CAIRNS", "lat": -16.9186, "lon": 145.7781},
+                                    {"city": "ALBURY", "lat": -36.0737, "lon": 146.9135},
+                                    {"city": "ALICE SPRINGS", "lat": -23.6980, "lon": 133.8807},
+                                    {"city": "ARMIDALE", "lat": -30.5100, "lon": 151.6700},
+                                    {"city": "BROOME", "lat": -17.9614, "lon": 122.2358},
+                                    {"city": "BUNDABERG", "lat": -24.8662, "lon": 152.3489},
+                                    {"city": "COFFS HARBOUR", "lat": -30.2963, "lon": 153.1141},
+                                    {"city": "DEVONPORT", "lat": -41.1806, "lon": 146.3508},
+                                    {"city": "GEELONG", "lat": -38.1499, "lon": 144.3617},
+                                    {"city": "GLADSTONE", "lat": -23.8420, "lon": 151.2520},
+                                    {"city": "KALGOORLIE", "lat": -30.7484, "lon": 121.4651},
+                                    {"city": "KATHERINE", "lat": -14.4656, "lon": 132.2632},
+                                    {"city": "LAUNCESTON", "lat": -41.4545, "lon": 147.1356},
+                                    {"city": "MACKAY", "lat": -21.1411, "lon": 149.1861},
+                                    {"city": "MILDURA", "lat": -34.2086, "lon": 142.1247},
+                                    {"city": "MOUNT ISA", "lat": -20.7252, "lon": 139.4972},
+                                    {"city": "PORT AUGUSTA", "lat": -32.4918, "lon": 137.7622},
+                                    {"city": "ROCKHAMPTON", "lat": -23.3777, "lon": 150.5100},
+                                    {"city": "TOOWOOMBA", "lat": -27.5598, "lon": 151.9507},
+                                    {"city": "TOWNSVILLE", "lat": -19.2576, "lon": 146.8179},
+                                    {"city": "WOLLONGONG", "lat": -34.4278, "lon": 150.8931}
                                 ]
                             },
                             "key": "city",
@@ -409,46 +482,26 @@ const cancellationGaugeSpec = {
                 "encoding": {
                     "longitude": {"field": "city_lon", "type": "quantitative"},
                     "latitude": {"field": "city_lat", "type": "quantitative"},
-                    "size": {"field": "city_count", "type": "quantitative", "scale": {"range": [100, 1000]}},
+                    "size": {
+                        "field": "city_count",
+                        "type": "quantitative",
+                        "scale": {"range": [100, 1000]}
+                    },
+                    // 美化后的 Tooltip，展示城市名称和航班数量
                     "tooltip": [
-                        {"field": "City1_upper", "type": "nominal"},
-                        {"field": "city_count", "type": "quantitative"}
+                        {"field": "City1_upper", "type": "nominal", "title": "City"},
+                        {"field": "city_count", "type": "quantitative", "title": "Flight Count", "format": ","}
                     ]
-                }
-            },
-            {
-                "data": {
-                    "values": [
-                        {"city": "SYDNEY", "lat": -33.8688, "lon": 151.2093},
-                        {"city": "MELBOURNE", "lat": -37.8136, "lon": 144.9631},
-                        {"city": "BRISBANE", "lat": -27.4698, "lon": 153.0251},
-                        {"city": "PERTH", "lat": -31.9505, "lon": 115.8605},
-                        {"city": "ADELAIDE", "lat": -34.9285, "lon": 138.6007},
-                        {"city": "DARWIN", "lat": -12.4634, "lon": 130.8456},
-                        {"city": "HOBART", "lat": -42.8821, "lon": 147.3272},
-                        {"city": "CANBERRA", "lat": -35.2809, "lon": 149.1300},
-                        {"city": "NEWCASTLE", "lat": -32.9283, "lon": 151.7817},
-                        {"city": "GOLD COAST", "lat": -28.0167, "lon": 153.4000},
-                        {"city": "CAIRNS", "lat": -16.9186, "lon": 145.7781}
-                    ]
-                },
-                "mark": {
-                    "type": "text",
-                    "dy": -10
-                },
-                "encoding": {
-                    "longitude": {"field": "lon", "type": "quantitative"},
-                    "latitude": {"field": "lat", "type": "quantitative"},
-                    "text": {"field": "city"},
-                    "color": {"value": "#ffbf00"}  
                 }
             }
         ]
     };
 
-    // Embed the map
+    // 嵌入地图
     vegaEmbed('#map', mapSpec).catch(console.error);
 }
+
+
 const onTimeComparisonSpec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
         "width": 300,
