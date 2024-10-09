@@ -11,152 +11,138 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            border: 17px solid #FFD700; /* 黄色边框 */
-            border-radius: 10px; /* 可选：使边框有圆角效果 */
-            padding: 0; /* 移除所有内边距 */
-            margin: 0; /* 移除所有外边距 */
-            box-sizing: border-box; /* 确保内边距和边框不会影响整体宽度 */
-            height: 100vh; /* 设置body高度为视窗高度 */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+
         .banner {
-    background-color: #FFD700; /* 黄色背景 */
-    border-bottom: 5px solid #FFD700; /* 底部黄色边框 */
-    padding: 20px;
-    width: 100%;
-    margin: 0; /* 移除默认外边距 */
-   
-    display: flex;
-    justify-content: flex-end; /* 使标题靠右 */
-    align-items: center; /* 垂直居中 */
-    box-sizing: border-box;
-}
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: #FFD700; /* 黄色背景 */
+            border-bottom: 5px solid #FFD700;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: flex-end; /* 使标题靠右 */
+            align-items: center;
+        }
 
-h1 {
-    display: flex;
-    align-items: center;
-    margin: 0;
-}
+        h1 {
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
 
-.australian {
-    font-family: 'Roboto', sans-serif; /* 假设使用类似的深蓝色字体 */
-    color: #003087; /* 深蓝色文字 */
-    font-weight: bold;
-    font-size: 1.8em;
-    letter-spacing: 0.1em;
-    margin-right: 10px; /* 给两个部分之间一些间距 */
-}
+        .australian {
+            font-family: 'Roboto', sans-serif;
+            color: #003087; /* 深蓝色文字 */
+            font-weight: bold;
+            font-size: 1.8em;
+            letter-spacing: 0.1em;
+            margin-right: 10px;
+        }
 
-.flights {
-    font-family: 'Roboto', sans-serif; /* 替换为类似字体 */
-    font-size: 1.8em;
-    background-color: #003087; /* 深蓝色背景 */
-    color: #FFD700; /* 黄色字体，形成镂空效果 */
-    padding: 5px 10px; /* 内部填充 */
-    border: 2px solid #003087; /* 蓝色边框 */
-    border-radius: 5px; /* 圆角效果 */
-    display: inline-block;
-    letter-spacing: 0.1em;
-    font-weight: bold;
-}
+        .flights {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.8em;
+            background-color: #003087; /* 深蓝色背景 */
+            color: #FFD700; /* 黄色字体 */
+            padding: 5px 10px;
+            border: 2px solid #003087;
+            border-radius: 5px;
+            letter-spacing: 0.1em;
+            font-weight: bold;
+        }
+
         .dashboard {
             display: grid;
-            grid-template-columns: 2fr 2fr 1fr 1fr; /* 大图占前两列，右边的四个小图占两列 */
-            grid-template-rows: auto auto auto; /* 上面两行放大图和右边小图，第三行放四个小图 */
+            grid-template-columns: 2fr 2fr 1fr 1fr;
+            grid-template-rows: auto auto auto;
             gap: 10px;
-            width: 90%;
-            margin-top: 10px;
-            flex: 1;
+            width: 100%;
+            margin-top: 100px; /* 留出空间给固定在顶部的banner */
+            padding: 20px;
+            box-sizing: border-box;
         }
+
         .gauge-container {
             display: flex;
-            flex-direction: column; /* 使标题和图表在垂直方向排列 */
-            align-items: center; /* 居中对齐 */
+            flex-direction: column;
+            align-items: center;
             text-align: center;
             padding: 10px;
         }
+
         .map-large {
             grid-column: span 2; /* 大图跨越前两列 */
             grid-row: span 2; /* 大图跨越前两行 */
-            height: 500px; /* 根据需要调整高度 */
             width: 100%;
+            height: 500px; /* 调整高度 */
         }
-        .small-chart {
+
+        .small-chart, .bottom-small-chart {
+            width: 100%;
             height: 280px; /* 小图的高度统一 */
-            display: flex;
-            justify-content: center; /* 水平居中 */
-            align-items: center; /* 垂直居中 */
         }
-        .bottom-small-chart {
-            height: 280px; /* 底部小图的高度 */
-            display: flex;
-            justify-content: center; /* 水平居中 */
-            align-items: center; /* 垂直居中 */
-        }
+
         .gauge-container h3 {
-            margin-bottom: 10px; /* 给标题与图表之间留出空间 */
-            align-self: flex-start; /* 保持标题靠左对齐 */
+            margin-bottom: 10px;
+            align-self: flex-start;
         }
     </style>
 </head>
-
-</head>
 <body>
-    
-    <!-- Dropdown for Airline selection -->
-    
-
-     <!-- Dashboard container -->
-    <!-- Dashboard container -->
     <div class="banner">
         <h1>
             <span class="australian">Australian</span>
             <span class="flights">FLIGHTS</span>
         </h1>
     </div>
-    
 
     <div class="dashboard">
-        <!-- 大图区域 -->
         <div class="gauge-container map-large">
             <h3>Australian Cities Map</h3>
             <div id="map"></div>
         </div>
         
-        <!-- 右上小图区域 -->
         <div class="gauge-container small-chart">
             <h3>On-time Performance</h3>
             <div id="onTimeGauge"></div>
         </div>
+        
         <div class="gauge-container small-chart">
             <h3>Cancellation Rate</h3>
             <div id="cancellationGauge"></div>
         </div>
+        
         <div class="gauge-container small-chart">
             <h3>Australian States Flight Volume Map</h3>
             <div id="map2"></div>
         </div>
+        
         <div class="gauge-container small-chart">
             <h3>On-time Performance Comparison</h3>
             <div id="onTimeComparison"></div>
         </div>
         
-        <!-- 底部小图区域 -->
         <div class="gauge-container bottom-small-chart">
             <h3>Monthly Flight Counts per Year</h3>
             <div id="heatmap-vis"></div>
         </div>
+        
         <div class="gauge-container small-chart">
             <h3>Flight Arrivals vs Departures</h3>
             <div id="additional-chart-2"></div>
         </div>
+        
         <div class="gauge-container bottom-small-chart">
             <h3>Overall Flight On-time Performance</h3>
             <div id="additional-chart-3"></div>
         </div>
+        
         <div class="gauge-container bottom-small-chart">
             <h3>Filter 4</h3>
             <label for="airlineSelect">Select Airline: </label>
@@ -166,7 +152,6 @@ h1 {
             <div id="additionalChart4"></div>
         </div>
     </div>
-
     <script type="text/javascript">
         // Function to load the airlines dynamically into the dropdown
         async function loadAirlines() {
