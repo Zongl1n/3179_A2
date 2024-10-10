@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -753,7 +754,7 @@ async function loadCities() {
     });
 
     const citySelect = document.getElementById("citySelect");
-    citySelect.innerHTML = '<option value="All Ports">All Ports</option>';
+    
 
     cities.forEach(city => {
         const option = document.createElement('option');
@@ -895,6 +896,7 @@ loadCities();
         // Load airlines into the dropdown and initialize the charts
         
         loadAirlines();
+        loadCities();
         
         
     </script>
