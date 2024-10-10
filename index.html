@@ -769,54 +769,60 @@ async function loadCities() {
 // Function to update the pie chart based on the selected city
 function updateChart() {
     const selectedCity = document.getElementById("citySelect").value;
-    const spec = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "width": 200,
-        "height": 200,
-        "data": {
-            "url": "https://raw.githubusercontent.com/Zongl1n/FIT3179/refs/heads/main/3179temp/DomesticAirlines.csv",
-            "format": {"type": "csv"}
-        },
-        "transform": [
-            {
-                "filter": selectedCity === "All Ports"
-                    ? "datum.Departing_Port !== null"
-                    : `datum.Departing_Port == '${selectedCity}' || datum.Arriving_Port == '${selectedCity}'`
-            },
-            {
-                "aggregate": [
-                    {"op": "sum", "field": "Departures_On_Time", "as": "Total_Departures"},
-                    {"op": "sum", "field": "Arrivals_On_Time", "as": "Total_Arrivals"}
-                ]
-            },
-            {
-                "fold": ["Total_Departures", "Total_Arrivals"],
-                "as": ["Flight_Type", "Count"]
-            }
-        ],
-        "mark": "arc",
-        "encoding": {
-            "theta": {"field": "Count", "type": "quantitative"},
-            "color": {
-                "field": "Flight_Type",
-                "type": "nominal",
-                "scale": {
-                    "domain": ["Total_Departures", "Total_Arrivals"],
-                    "range": ["#00355f", "#FFD700"]
-                },
-                "legend": {
-                    "title": "Flight Type",
-                    "labels": {"Total_Departures": "Departures", "Total_Arrivals": "Arrivals"}
-                }
-            },
-            "tooltip": [
-                {"field": "Flight_Type", "type": "nominal", "title": "Type"},
-                {"field": "Count", "type": "quantitative", "title": "Total Flights"}
-            ]
-        }
-    };
 
-    vegaEmbed('#additional-chart-2', spec).catch(console.error);
+const spec = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 200,
+    "height": 200,
+    "data": {
+        "url": "https://raw.githubusercontent.com/Zongl1n/FIT3179/refs/heads/main/3179temp/DomesticAirlines.csv",
+        "format": {"type": "csv"}
+    },
+    "transform": [
+        {
+            "filter": selectedCity === "All Ports"
+                ? "datum.Departing_Port !== null"
+                : `datum.Departing_Port == '${selectedCity}' || datum.Arriving_Port == '${selectedCity}'`
+        },
+        {
+            "aggregate": [
+                {"op": "sum", "field": "Departures_On_Time", "as": "Total_Departures"},
+                {"op": "sum", "field": "Arrivals_On_Time", "as": "Total_Arrivals"}
+            ]
+        },
+        {
+            "fold": ["Total_Departures", "Total_Arrivals"],
+            "as": ["Flight_Type", "Count"]
+        },
+        {
+            "calculate": `"${selectedCity}"`,
+            "as": "Selected_City"
+        }
+    ],
+    "mark": "arc",
+    "encoding": {
+        "theta": {"field": "Count", "type": "quantitative"},
+        "color": {
+            "field": "Flight_Type",
+            "type": "nominal",
+            "scale": {
+                "domain": ["Total_Departures", "Total_Arrivals"],
+                "range": ["#00355f", "#FFD700"]
+            },
+            "legend": {
+                "title": "Flight Type",
+                "labels": {"Total_Departures": "Departures", "Total_Arrivals": "Arrivals"}
+            }
+        },
+        "tooltip": [
+            {"field": "Selected_City", "type": "nominal", "title": "City"},
+            {"field": "Flight_Type", "type": "nominal", "title": "Type"},
+            {"field": "Count", "type": "quantitative", "title": "Total Flights"}
+        ]
+    }
+};
+
+vegaEmbed('#additional-chart-2', spec).catch(console.error);
 }
 const spec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
